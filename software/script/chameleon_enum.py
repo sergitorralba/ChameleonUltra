@@ -57,6 +57,9 @@ class Command(enum.IntEnum):
     GET_BLE_PAIRING_ENABLE = 1036
     SET_BLE_PAIRING_ENABLE = 1037
 
+    GET_SLEEP_TIMEOUT = 1039
+    SET_SLEEP_TIMEOUT = 1040
+
     HF14A_SCAN = 2000
     MF1_DETECT_SUPPORT = 2001
     MF1_DETECT_PRNG = 2002
@@ -68,6 +71,8 @@ class Command(enum.IntEnum):
     MF1_READ_ONE_BLOCK = 2008
     MF1_WRITE_ONE_BLOCK = 2009
     HF14A_RAW = 2010
+    HF14A_SCAN_KEEP = 2016
+    HF14A_AUTH_TRACE = 2017
     MF1_MANIPULATE_VALUE_BLOCK = 2011
     MF1_CHECK_KEYS_OF_SECTORS = 2012
     MF1_HARDNESTED_ACQUIRE = 2013
@@ -91,6 +96,8 @@ class Command(enum.IntEnum):
     IOPROX_WRITE_TO_T55XX = 3011
     IOPROX_DECODE_RAW = 3012
     IOPROX_COMPOSE_ID = 3013
+    LF_T55XX_WRITE = 3016
+    IDTECK_WRITE_TO_T55XX = 3018
 
     MF1_WRITE_EMU_BLOCK_DATA = 4000
     HF14A_SET_ANTI_COLL_DATA = 4001
@@ -138,6 +145,17 @@ class Command(enum.IntEnum):
     MF1_SET_FIELD_OFF_DO_RESET = 4038
     MF1_GET_FIELD_OFF_DO_RESET = 4039
 
+    MF1_GET_PRNG_TYPE = 4040
+    MF1_SET_PRNG_TYPE = 4041
+
+    # ISO14443-4 T=CL emulation
+    HF14A_4_APDU_RECV = 6000
+    HF14A_4_APDU_SEND = 6001
+    HF14A_4_SET_ANTI_COLL = 6002
+    HF14A_4_STATIC_RESP = 6003
+    HF14A_4_READER_APDU = 6004
+    HF14A_4_EMV_SCAN = 6005
+
     EM410X_SET_EMU_ID = 5000
     EM410X_GET_EMU_ID = 5001
     HIDPROX_SET_EMU_ID = 5002
@@ -148,6 +166,8 @@ class Command(enum.IntEnum):
     PAC_GET_EMU_ID = 5007
     IOPROX_SET_EMU_ID = 5008
     IOPROX_GET_EMU_ID = 5009
+    IDTECK_SET_EMU_ID = 5012
+    IDTECK_GET_EMU_ID = 5013
     EM4X05_SCAN = 3030
     EM4X05_READSNIFF = 3032
     LF_SNIFF = 3031
@@ -301,6 +321,7 @@ class TagSpecificType(enum.IntEnum):
     # Indala
     # Keri
     # NexWatch
+    IDTECK = 310
 
     # Reader-Talk-First       400
     # T5577
@@ -333,7 +354,8 @@ class TagSpecificType(enum.IntEnum):
 
     # ST25TA series          2000
 
-    # HF14A-4 series         3000
+    # ISO14443-4 T=CL emulation
+    HF14A_4 = 3000
 
     @staticmethod
     def list(exclude_meta=True):
@@ -382,6 +404,8 @@ class TagSpecificType(enum.IntEnum):
             return "PAC/Stanley"
         elif self == TagSpecificType.Viking:
             return "Viking"
+        elif self == TagSpecificType.IDTECK:
+            return "IDTECK"
         elif self == TagSpecificType.MIFARE_Mini:
             return "Mifare Mini"
         elif self == TagSpecificType.MIFARE_1024:
@@ -582,11 +606,13 @@ class ButtonPressFunction(enum.IntEnum):
             return "Toggle NFC Field Generator"
         return "None"
 
+
 @enum.unique
 class MfcValueBlockOperator(enum.IntEnum):
     DECREMENT = 0xC0
     INCREMENT = 0xC1
     RESTORE = 0xC2
+
 
 @enum.unique
 class HIDFormat(enum.IntEnum):
